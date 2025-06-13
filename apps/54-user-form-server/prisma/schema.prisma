@@ -1,0 +1,32 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model UserAuth {
+  createdAt   DateTime     @default(now())
+  id          String       @id @default(cuid())
+  otp         String?
+  pan         String       @unique
+  phoneNumber String
+  updatedAt   DateTime     @updatedAt
+  userDetails UserDetail[]
+  verified    Boolean
+}
+
+model UserDetail {
+  createdAt   DateTime @default(now())
+  dateofbirth DateTime
+  email       String   @unique
+  id          String   @id @default(cuid())
+  name        String
+  occupation  String?
+  pan         String   @unique
+  updatedAt   DateTime @updatedAt
+  userAuth    UserAuth @relation(fields: [userAuthId], references: [id])
+  userAuthId  String   @unique
+}
